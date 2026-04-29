@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fourier Epicycles — Gabriel Mieses</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ── TOP BAR ── -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="topbar-left">
+      <span class="topbar-title">FOURIER EPICYCLES</span>
+      <span class="topbar-sub">Discrete Fourier Transform · Visualization</span>
+    </div>
+    <div class="topbar-right">
+      <a href="https://github.com/gmieses27" target="_blank" class="topbar-link">GitHub ↗</a>
+    </div>
+  </div>
+</header>
+
+<!-- ── MAIN LAYOUT ── -->
+<main class="app-layout">
+
+  <!-- LEFT PANEL: controls + info -->
+  <aside class="sidebar">
+
+    <!-- About -->
+    <section class="panel">
+      <div class="panel-label">ABOUT</div>
+      <p class="panel-text">
+        Any closed curve can be drawn by a chain of rotating circles — epicycles.
+        This tool decomposes a path into its frequency components via the DFT,
+        then reconstructs it in real time as overlaid, color-coded epicycles.
+        The more harmonics you add, the sharper the detail.
+      </p>
+    </section>
+
+    <!-- Mode -->
+    <section class="panel">
+      <div class="panel-label">INPUT MODE</div>
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="preset">PRESET</button>
+        <button class="mode-tab" data-mode="draw">DRAW</button>
+      </div>
+
+      <div id="preset-panel">
+        <div class="ctrl-row">
+          <label class="ctrl-label" for="preset-select">Curve</label>
+          <select id="preset-select" class="ctrl-select">
+            <option value="heart">Heart</option>
+            <option value="trefoil">Trefoil Knot</option>
+            <option value="epitrochoid">Epitrochoid</option>
+            <option value="rose5">Rose (k=5)</option>
+            <option value="butterfly">Butterfly</option>
+            <option value="lissajous">Lissajous 3:4</option>
+            <option value="star7">Heptagram Star</option>
+            <option value="spirograph">Spirograph</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="draw-panel" class="hidden">
+        <p class="panel-hint">Draw on the canvas ↓ then press Analyze.</p>
+        <button id="btn-clear-draw" class="ctrl-btn secondary">Clear Drawing</button>
+      </div>
+
+      <button id="btn-analyze" class="ctrl-btn primary">▶ Analyze &amp; Play</button>
+    </section>
+
+    <!-- Harmonics -->
+    <section class="panel">
+      <div class="panel-label">HARMONICS</div>
+      <div class="ctrl-row">
+        <label class="ctrl-label" for="harmonic-count">N = <span id="lbl-harmonics">64</span></label>
+        <input type="range" id="harmonic-count" min="1" max="256" value="64" class="ctrl-range">
+      </div>
+      <div class="ctrl-row">
+        <label class="ctrl-label" for="speed-range">Speed</label>
+        <input type="range" id="speed-range" min="1" max="100" value="15" class="ctrl-range">
+      </div>
+      <div class="ctrl-row toggle-row">
+        <label class="ctrl-label">Show circles</label>
+        <label class="toggle"><input type="checkbox" id="toggle-circles" checked><span class="slider"></span></label>
+      </div>
+      <div class="ctrl-row toggle-row">
+        <label class="ctrl-label">Color by frequency</label>
+        <label class="toggle"><input type="checkbox" id="toggle-colors" checked><span class="slider"></span></label>
+      </div>
+      <div class="ctrl-row toggle-row">
+        <label class="ctrl-label">Fade trail</label>
+        <label class="toggle"><input type="checkbox" id="toggle-fade"><span class="slider"></span></label>
+      </div>
+    </section>
+
+    <!-- Convergence explorer -->
+    <section class="panel">
+      <div class="panel-label">CONVERGENCE</div>
+      <p class="panel-hint">Step through harmonic count to see how the approximation improves.</p>
+      <div class="conv-controls">
+        <button id="btn-conv-prev" class="ctrl-btn icon">◀</button>
+        <span id="lbl-conv-n" class="conv-n">N=1</span>
+        <button id="btn-conv-next" class="ctrl-btn icon">▶</button>
+      </div>
+      <div class="conv-steps">
+        <span>1</span><span>2</span><span>4</span><span>8</span><span>16</span>
+        <span>32</span><span>64</span><span>128</span><span>256</span>
+      </div>
+    </section>
+
+    <!-- Attribution -->
+    <footer class="sidebar-footer">
+      Built by <a href="https://github.com/gmieses27" target="_blank">Gabriel Mieses</a>
+    </footer>
+
+  </aside>
+
+  <!-- CENTER: main canvas + spectrum -->
+  <div class="canvas-column">
+
+    <div class="canvas-wrapper" id="main-canvas-wrapper">
+      <canvas id="main-canvas"></canvas>
+      <div class="canvas-overlay" id="canvas-hint">← Select a preset and press Analyze</div>
+    </div>
+
+    <!-- Frequency Spectrum -->
+    <div class="spectrum-wrapper">
+      <div class="spectrum-header">
+        <span class="spectrum-label">FREQUENCY SPECTRUM — amplitude by harmonic rank</span>
+        <span id="spectrum-subtitle" class="spectrum-sub"></span>
+      </div>
+      <canvas id="spectrum-canvas"></canvas>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="js/curves.js"></script>
+<script src="js/dft.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
